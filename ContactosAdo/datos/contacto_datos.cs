@@ -1,13 +1,15 @@
-﻿using ContactoAdo.Models;
+﻿
 using System.Data.SqlClient;
 using System.Data;
 using ContactosAdo.Models;
 using ContactosAdo.datos;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ContactoAdo.datos
 {
     public class ContactoDatos
     {
+        //listar contactos
         public List<ContactoModel> Listar()
         {
             List<ContactoModel> Lista = new List<ContactoModel>();
@@ -24,18 +26,19 @@ namespace ContactoAdo.datos
                     {
                         Lista.Add(new ContactoModel
                         {
-                            IdContacto = Convert.ToInt32(dr["IdContactos"]),
-                            Nombre = dr["nombre"].ToString(),
-                            Telefono = dr["telefono"].ToString(),
-                            Correo = dr["correo"].ToString(),
-                            Clave = dr["clave"].ToString()
-                        });
+                            idContactos = Convert.ToInt32(dr["IdContactos"]),
+                            nombre = dr["nombre"].ToString(),
+                            telefono = dr["telefono"].ToString(),
+                            correo = dr["correo"].ToString(),
+                            clave = dr["clave"].ToString()
+                        }) ;
                     }
                 }
             }
             return Lista;
         }
 
+        //odteber contactos
         public ContactoModel ObtenerContacto(int idContacto)
         {
             ContactoModel _contacto=new ContactoModel();
@@ -44,12 +47,25 @@ namespace ContactoAdo.datos
                 using (var conexion= new SqlConnection(cn.getCadenaSql()))
                 {
                     conexion.Open();
-                    SqlCommand cmd = new SqlCommand("SP_obtener", conexion)
-                }
+                    SqlCommand cmd = new SqlCommand("SP_obtener", conexion);
+                    cmd.Parameters.AddWithValue("idContacto", idContacto);
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while(dr.Read())
+                        {
+                            _contacto.idContactos = Convert.ToInt32(dr["IdContactos"]);
+                            _contacto.nombre = dr["nombre"].ToString();
+                            _contacto.telefono = dr["telefono"].ToString();
+                            _contacto.correo = dr["correo"].ToString();
+                            _contacto.clave = dr["clave"].ToString();
+                        }
+                    }
+                };
             
             return _contacto;
         }
 
+        //guardar contacto
         public bool GuardarContacto(ContactoModel model)
         {
             bool respuesta;
@@ -77,6 +93,7 @@ namespace ContactoAdo.datos
             return respuesta;
         }
 
+        //editar contacto
         public bool EditarContacto(ContactoModel model)
         {
             bool respuesta;
@@ -88,7 +105,7 @@ namespace ContactoAdo.datos
                     conexion.Open();
                     SqlCommand cmd = new SqlCommand("SP_editar", conexion);
                     cmd.Parameters.AddWithValue("idContactos", model.idContactos);
-                    cmd.Parameters.AddWithValue("nombre",model.nombre)
+                    cmd.Parameters.AddWithValue("nombre", model.nombre);
                     cmd.Parameters.AddWithValue("telefono", model.telefono);
                     cmd.Parameters.AddWithValue("correo", model.correo);
                     cmd.Parameters.AddWithValue("clave", model.clave);
@@ -105,6 +122,8 @@ namespace ContactoAdo.datos
             return respuesta;
         }
 
+
+        //eliminar contacto
         public ContactoModel EliminarContacto(int idContacto)
         {
             ContactoModel _contacto = new ContactoModel();
@@ -113,8 +132,22 @@ namespace ContactoAdo.datos
             using (var conexion = new SqlConnection(cn.getCadenaSql()))
             {
                 conexion.Open();
-                SqlCommand cmd = new SqlCommand("SP_eliminar", conexion)
+                SqlCommand cmd = new SqlCommand("SP_eliminar", conexion);
+                cmd.Parameters.AddWithValue("idContacto", idContacto);
+                
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        _contacto.idContactos = Convert.ToInt32(dr["IdContactos"]);
+                        _contacto.nombre = dr["nombre"].ToString();
+                        _contacto.telefono = dr["telefono"].ToString();
+                        _contacto.correo = dr["correo"].ToString();
+                        _contacto.clave = dr["clave"].ToString();
+                    }
                 }
+                
+            };
 
             return _contacto;
         }
