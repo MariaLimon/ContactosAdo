@@ -124,32 +124,29 @@ namespace ContactoAdo.datos
 
 
         //eliminar contacto
-        public ContactoModel EliminarContacto(int idContacto)
+        public bool EliminarContacto(int idContacto)
         {
-            ContactoModel _contacto = new ContactoModel();
-
-            var cn = new Conexion();
-            using (var conexion = new SqlConnection(cn.getCadenaSql()))
+            bool respuesta;
+            try
             {
-                conexion.Open();
-                SqlCommand cmd = new SqlCommand("SP_eliminar", conexion);
-                cmd.Parameters.AddWithValue("idContacto", idContacto);
-                
-                using (var dr = cmd.ExecuteReader())
+                var cn = new Conexion();
+                using (var conexion = new SqlConnection(cn.getCadenaSql()))
                 {
-                    while (dr.Read())
-                    {
-                        _contacto.idContactos = Convert.ToInt32(dr["IdContactos"]);
-                        _contacto.nombre = dr["nombre"].ToString();
-                        _contacto.telefono = dr["telefono"].ToString();
-                        _contacto.correo = dr["correo"].ToString();
-                        _contacto.clave = dr["clave"].ToString();
-                    }
-                }
-                
-            };
+                    conexion.Open();
+                    SqlCommand cmd = new SqlCommand("SP_eliminar", conexion);
+                    cmd.Parameters.AddWithValue("idContacto", idContacto);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
+                };
+                respuesta = true;
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+                respuesta = false;
+            }
+            return respuesta;
 
-            return _contacto;
         }
     }
 }﻿
