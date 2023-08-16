@@ -1,32 +1,44 @@
-﻿using ContactosAdo.Models;
+﻿using CrudAdoNet.Models;
+using ContactoAdo.datos;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ContactosAdo.Controllers
 {
-    public class HomeController : Controller
+    public class MantenedorController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        ContactoDatos _contactoDatos = new ContactoDatos();
+        public IActionResult Listar()
         {
-            _logger = logger;
+            var lista = _contactoDatos=new ContactoDatos();
+            //mostrar una lista de contactos
+            return View(lista);
         }
+        [HttpGet]
 
-        public IActionResult Index()
+        public IActionResult Guardar()
         {
+            //para mostar el formulario
             return View();
         }
-
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult Guardar(ContactoModel model)
         {
-            return View();
-        }
+            if (ModelState.IsValid)
+            {
+                return View();
+            }
+            //para obtener los datos del formulario y mandarlo a la base de datos
+            bool respuesta = _contactoDatos.GuardarContacto(model);
+            if (respuesta)
+            {
+                return RedirectToAction("Listar");
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

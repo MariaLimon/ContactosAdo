@@ -1,8 +1,8 @@
 ﻿
 using System.Data.SqlClient;
 using System.Data;
-using ContactosAdo.Models;
-using ContactosAdo.datos;
+using CrudAdoNet.Models;
+using CrudAdoNet.datos;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //archivo de acceso a los datos
@@ -13,7 +13,7 @@ namespace ContactoAdo.datos
         //listar contactos
         public List<ContactoModel> Listar()
         {
-            List<ContactoModel> Lista = new List<ContactoModel>();
+            List<ContactoModel> oLista = new List<ContactoModel>();
             
             var cn = new Conexion();//creado instancia para acceder a la clase conexxion
             using (var conexion = new SqlConnection(cn.getCadenaSql())) //devuelve la cadena de conexion para acceder a la base de datos
@@ -26,26 +26,26 @@ namespace ContactoAdo.datos
                 {
                     while (dr.Read())//recorre el archivo el elemento por elemento
                     {
-                        Lista.Add(new ContactoModel  
+                        oLista.Add(new ContactoModel  
                         {
                             //esta creando los objetos que esta guardando en la lista
-                            idContactos = Convert.ToInt32(dr["IdContactos"]),
-                            nombre = dr["nombre"].ToString(),
-                            telefono = dr["telefono"].ToString(),
-                            correo = dr["correo"].ToString(),
-                            clave = dr["clave"].ToString()
+                            IdContactos = Convert.ToInt32(dr["IdContactos"]),
+                            Nombre = dr["nombre"].ToString(),
+                            Telefono = dr["telefono"].ToString(),
+                            Correo = dr["correo"].ToString(),
+                            Clave = dr["clave"].ToString()
                         }) ;
                     }
                 }
             }
-            return Lista;
+            return oLista;
         }
 
 
         //obteber contactos
         public ContactoModel ObtenerContacto(int idContacto) //estamos declarando un metodo publico
         {
-            ContactoModel _contacto=new ContactoModel(); //crea un nuevo objeto de tipo contacto porque es lo que tiene que debolver
+            ContactoModel oContacto=new ContactoModel(); //crea un nuevo objeto de tipo contacto porque es lo que tiene que debolver
            
                 var cn = new Conexion();
                 using (var conexion= new SqlConnection(cn.getCadenaSql()))
@@ -58,16 +58,16 @@ namespace ContactoAdo.datos
                     {
                         while(dr.Read())
                         {
-                            _contacto.idContactos = Convert.ToInt32(dr["IdContactos"]);
-                            _contacto.nombre = dr["nombre"].ToString();
-                            _contacto.telefono = dr["telefono"].ToString();
-                            _contacto.correo = dr["correo"].ToString();
-                            _contacto.clave = dr["clave"].ToString();
+                            oContacto.IdContactos = Convert.ToInt32(dr["IdContactos"]);
+                            oContacto.Nombre = dr["nombre"].ToString();
+                            oContacto.Telefono = dr["telefono"].ToString();
+                            oContacto.Correo = dr["correo"].ToString();
+                            oContacto.Clave = dr["clave"].ToString();
                         }
                     }
                 };
             
-            return _contacto;
+            return oContacto;
         }
 
         //guardar contacto
@@ -82,10 +82,10 @@ namespace ContactoAdo.datos
                     conexion.Open();
                     SqlCommand cmd = new SqlCommand("SP_guardar", conexion); //crea el nuevo comando
                                              //nombre de nuetra columna en base de datos tal cual
-                    cmd.Parameters.AddWithValue("nombre", model.nombre);
-                    cmd.Parameters.AddWithValue("telefono", model.telefono);
-                    cmd.Parameters.AddWithValue("correo", model.correo);
-                    cmd.Parameters.AddWithValue("clave", model.clave);
+                    cmd.Parameters.AddWithValue("nombre", model.Nombre);
+                    cmd.Parameters.AddWithValue("telefono", model.Telefono);
+                    cmd.Parameters.AddWithValue("correo", model.Correo);
+                    cmd.Parameters.AddWithValue("clave", model.Clave);
                     cmd.CommandType = CommandType.StoredProcedure; //tipo de comando 
                     cmd.ExecuteNonQuery(); //ejecuta
                 }
@@ -110,11 +110,11 @@ namespace ContactoAdo.datos
                 {
                     conexion.Open();
                     SqlCommand cmd = new SqlCommand("SP_editar", conexion); //pasa el procedimiento amacenado y la conexion
-                    cmd.Parameters.AddWithValue("idContactos", model.idContactos);
-                    cmd.Parameters.AddWithValue("nombre", model.nombre);
-                    cmd.Parameters.AddWithValue("telefono", model.telefono);
-                    cmd.Parameters.AddWithValue("correo", model.correo);
-                    cmd.Parameters.AddWithValue("clave", model.clave);
+                    cmd.Parameters.AddWithValue("idContactos", model.IdContactos);
+                    cmd.Parameters.AddWithValue("nombre", model.Nombre);
+                    cmd.Parameters.AddWithValue("telefono", model.Telefono);
+                    cmd.Parameters.AddWithValue("correo", model.Correo);
+                    cmd.Parameters.AddWithValue("clave", model.Clave);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.ExecuteNonQuery();
                 }

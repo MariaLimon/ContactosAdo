@@ -1,0 +1,44 @@
+﻿@model CrudAdoNet.Models.ContactoModel;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Guardar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card col-8">
+    <div class="card-header">
+        Crear contacto
+    </div>
+    <div class="card-body justify-content-center">
+        <form asp-action="Guardar" asp-controller="Mantenedor" method="post">
+            <div class="col-6" >
+                <label class="form-label">Nombre</label>
+                <input asp-for="Nombre" type="text" class="from-control" />
+                <samp asp-validation="Nombre" class="text-danger"></samp>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Telefono</label>
+                <input asp-for="Telefono" type="text" class="from-control" />
+                <samp asp-validation="Telefono" class="text-danger"></samp>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Correo</label>
+                <input asp-for="Correo" type="text" class="from-control" />
+                <samp asp-validation="Correo" class="text-danger"></samp>
+            </div>
+            <div class="col-6">
+                <label class="form-label">Clave</label>
+                <input asp-for="Clave" type="password" class="from-control" id="inputPassword2" placeholder="Password"/>
+            </div>
+            <div class="col-6 mb-2">
+                <label class="form-label">Password</label>
+                <input type="password" class="from-control" placeholder="Password" />
+            </div>
+            <div class="col-4">
+                <button type="submit" class="btn btn-primary mb-3"> Confirm identity</button>
+                <a asp-action="Listar" asp-asp-controller="Mantenedor" class="btn btn-warning btn-sm">Volver a la lista</a>
+            </div>
+        </form>
+    </div>
+</div>
